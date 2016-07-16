@@ -1,0 +1,9 @@
+angular-2-tour-of-heroes/typings
+angular-2-tour-of-heroes/app/**/*.js
+angular-2-tour-of-heroes/app/**/*.map
+angular-2-tour-of-heroes/node_modules
+angular-2-tour-of-heroes/jspm_packages
+angular-2-tour-of-heroes/bower_components
+
+angular-2-tour-of-heroes-ws/target
+angular-2-tour-of-heroes-ws/target/**/*
