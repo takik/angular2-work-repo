@@ -1,6 +1,6 @@
 package heroes.ws.controller;
 
-import heroes.ws.model.Greeting;
+import heroes.ws.model.Hero;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -11,22 +11,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Controller
-public class GreetingController {
+public class HeroController {
 
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
     @CrossOrigin(origins = "http://localhost:9000")
     @RequestMapping("/greeting")
-    public @ResponseBody Greeting greeting(@RequestParam(required=false, defaultValue="World") String name) {
+    public @ResponseBody Hero greeting(@RequestParam(required=false, defaultValue="World") String name) {
         System.out.println("==== in greeting ====");
-        return new Greeting(counter.incrementAndGet(), String.format(template, name));
+        return new Hero(counter.incrementAndGet(), String.format(template, name));
     }
 
     @RequestMapping("/greeting-javaconfig")
-    public @ResponseBody Greeting greetingWithJavaconfig(@RequestParam(required=false, defaultValue="World") String name) {
+    public @ResponseBody Hero greetingWithJavaconfig(@RequestParam(required=false, defaultValue="World") String name) {
         System.out.println("==== in greeting ====");
-        return new Greeting(counter.incrementAndGet(), String.format(template, name));
+        return new Hero(counter.incrementAndGet(), String.format(template, name));
     }
 
 }
