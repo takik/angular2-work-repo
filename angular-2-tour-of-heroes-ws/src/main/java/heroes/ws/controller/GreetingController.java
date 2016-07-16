@@ -1,6 +1,6 @@
 package heroes.ws.controller;
 
-import heroes.ws.rest.model.Greeting;
+import heroes.ws.model.Greeting;
 
 import java.util.concurrent.atomic.AtomicLong;
 
