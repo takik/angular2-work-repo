@@ -9,8 +9,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-@SpringBootApplication
-public class HeroAppWs extends SpringBootServletInitializer {
+@SpringBootApplication(scanBasePackages="heroes.ws.*")
+public class HeroAppWs  extends SpringBootServletInitializer{
 
     public static void main(String[] args) {
         SpringApplication.run(HeroAppWs.class, args);
@@ -26,8 +26,8 @@ public class HeroAppWs extends SpringBootServletInitializer {
         };
     }
     
-//    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-//        return application.sources(HeroAppWs.class);
-//    }
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(HeroAppWs.class);
+    }
 
 }
