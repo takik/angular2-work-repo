@@ -14,4 +14,13 @@ curl -H "Content-Type: application/json" http://localhost:8090/heroes-ws/list
 
 3/ Get Hero
 
-curl -H "Content-Type: application/json" http://localhost:8090/heroes-ws/get/{id}
+curl -H "Content-Type: application/json" http://localhost:8090/heroes-ws/get/1
+
+4/Update Hero
+
+curl -H "Content-Type: application/json" -X PUT -d '{"id":"1","name":"Hero 1.1"}' "http://localhost:8090/heroes-ws/update/1"
+
+5/Delete Hero
+
+curl -H "Content-Type: application/json" -X DELETE  "http://localhost:8090/heroes-ws/delete/1"
+
