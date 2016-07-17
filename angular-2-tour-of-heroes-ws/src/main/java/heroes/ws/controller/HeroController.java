@@ -1,11 +1,12 @@
 package heroes.ws.controller;
 
-import heroes.ws.model.Hero;
+import heroes.ws.jpa.entity.Hero;
+import heroes.ws.service.IHeroService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,23 +25,27 @@ public class HeroController {
 
 	//http://websystique.com/springmvc/spring-mvc-4-restful-web-services-crud-example-resttemplate/
 	
+	
+	@Autowired
+	private IHeroService heroService;
+	
+	
 	private static final Logger _LOG = org.slf4j.LoggerFactory
 			.getLogger(HeroController.class);
 
-	private List<Hero> heroes =  new ArrayList<Hero>();
-
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ResponseEntity<List<Hero>> getAllHeroes() {
-		_LOG.info("==== in getAllHeroes ====");
+		_LOG.info("getAllHeroes");
 
-		return new ResponseEntity<List<Hero>>(heroes, HttpStatus.OK);
+		return new ResponseEntity<List<Hero>>(heroService.findAll(), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Hero> getHero(@PathVariable("id") int id) {
-		_LOG.info("Updating User {} ", id);
+	public ResponseEntity<Hero> getHero(@PathVariable("id") Long id) {
+	
+		_LOG.info("Select a Hero {} ", id);
 
-		return new ResponseEntity<Hero>(heroes.get(id - 1), HttpStatus.OK);
+		return new ResponseEntity<Hero>(heroService.getOne(id), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
@@ -52,13 +57,13 @@ public class HeroController {
 		headers.setLocation(ucBuilder.path("/hero/getOne/{id}")
 				.buildAndExpand(hero.getId()).toUri());
 
-		heroes.add(hero);
+		heroService.saveOrUpdate(hero);
 
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Hero> updateHero(@PathVariable("id") int id,
+	public ResponseEntity<Hero> updateHero(@PathVariable("id") Long id,
 			@RequestBody Hero hero) {
 		_LOG.info("Updating User {}", id);
 		Hero aHero = getHero(id).getBody();
@@ -67,7 +72,7 @@ public class HeroController {
 	}
 
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Hero> deleteUser(@PathVariable("id") int id) {
+	public ResponseEntity<Hero> deleteUser(@PathVariable("id") Long id) {
 		_LOG.info("Fetching & Deleting User with id {} ", id);
 
 		/*
@@ -78,8 +83,9 @@ public class HeroController {
 		 */
 
 		// userService.deleteUserById(id);
-
-		heroes.remove(id);
+		Hero aHero = getHero(id).getBody();
+		heroService.delete(aHero);
+		
 		return new ResponseEntity<Hero>(HttpStatus.NO_CONTENT);
 	}
 
