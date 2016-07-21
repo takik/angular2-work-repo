@@ -38,11 +38,6 @@ public class HeroController {
 
 		if (heroes.isEmpty()) {
 			return new ResponseEntity<List<Hero>>(HttpStatus.NO_CONTENT);// You
-																			// many
-																			// decide
-																			// to
-																			// return
-																			// HttpStatus.NOT_FOUND
 		}
 
 		_LOG.info("getAllHeroes returns {} heroes", heroes.size());
@@ -65,13 +60,16 @@ public class HeroController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ResponseEntity<Void> createHero(@RequestBody Hero hero,
 			UriComponentsBuilder ucBuilder) {
-		_LOG.info("Creating User {}", hero.getName());
+	
+		_LOG.debug("Creating Hero {}", hero.getName());
 
+		
+		heroService.saveOrUpdate(hero);
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/hero/getOne/{id}")
 				.buildAndExpand(hero.getId()).toUri());
 
-		heroService.saveOrUpdate(hero);
 
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
