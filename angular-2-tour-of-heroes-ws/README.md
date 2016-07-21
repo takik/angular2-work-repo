@@ -3,6 +3,8 @@ Project WS PRoject Angular 2
 1/Create Hero :
 
 curl -H "Content-Type: application/json" -X POST -d '{"id":"1","name":"Hero 1"}' "http://localhost:8090/heroes-ws/create"
+curl -H "Content-Type: application/json" -X POST -d '{"id":"2","name":"Hero 3"}' "http://localhost:8090/heroes-ws/create"
+curl -H "Content-Type: application/json" -X POST -d '{"id":"3","name":"Hero 4"}' "http://localhost:8090/heroes-ws/create"
 
 2/List Heroes
 
