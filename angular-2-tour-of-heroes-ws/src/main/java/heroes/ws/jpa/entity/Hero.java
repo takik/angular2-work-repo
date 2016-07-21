@@ -15,7 +15,7 @@ public class Hero {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 	
 	@Column
 	@NotBlank
@@ -31,7 +31,7 @@ public class Hero {
 		this.name = name;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
