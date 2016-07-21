@@ -23,29 +23,43 @@ import org.springframework.web.util.UriComponentsBuilder;
 @CrossOrigin(origins = "http://localhost:9000")
 public class HeroController {
 
-	//http://websystique.com/springmvc/spring-mvc-4-restful-web-services-crud-example-resttemplate/
-	
-	
+	// http://websystique.com/springmvc/spring-mvc-4-restful-web-services-crud-example-resttemplate/
+
 	@Autowired
 	private IHeroService heroService;
-	
-	
+
 	private static final Logger _LOG = org.slf4j.LoggerFactory
 			.getLogger(HeroController.class);
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ResponseEntity<List<Hero>> getAllHeroes() {
-		_LOG.info("getAllHeroes");
 
-		return new ResponseEntity<List<Hero>>(heroService.findAll(), HttpStatus.OK);
+		List<Hero> heroes = heroService.findAll();
+
+		if (heroes.isEmpty()) {
+			return new ResponseEntity<List<Hero>>(HttpStatus.NO_CONTENT);// You
+																			// many
+																			// decide
+																			// to
+																			// return
+																			// HttpStatus.NOT_FOUND
+		}
+
+		_LOG.info("getAllHeroes returns {} heroes", heroes.size());
+
+		return new ResponseEntity<List<Hero>>(heroes, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Hero> getHero(@PathVariable("id") Long id) {
-	
+		Hero hero = heroService.getOne(id);
+		if (hero == null) {
+			_LOG.info("Hero with id {} not found", id);
+			return new ResponseEntity<Hero>(HttpStatus.NOT_FOUND);
+		}
 		_LOG.info("Select a Hero {} ", id);
 
-		return new ResponseEntity<Hero>(heroService.getOne(id), HttpStatus.OK);
+		return new ResponseEntity<Hero>(hero, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
@@ -65,9 +79,14 @@ public class HeroController {
 	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<Hero> updateHero(@PathVariable("id") Long id,
 			@RequestBody Hero hero) {
-		_LOG.info("Updating User {}", id);
-		Hero aHero = getHero(id).getBody();
+		Hero aHero = heroService.getOne(id);
+
+		if (aHero == null) {
+			_LOG.info("Hero with id {} not found", id);
+			return new ResponseEntity<Hero>(HttpStatus.NOT_FOUND);
+		}
 		aHero.setName(hero.getName());
+		heroService.saveOrUpdate(aHero);
 		return new ResponseEntity<Hero>(aHero, HttpStatus.OK);
 	}
 
@@ -75,17 +94,15 @@ public class HeroController {
 	public ResponseEntity<Hero> deleteUser(@PathVariable("id") Long id) {
 		_LOG.info("Fetching & Deleting User with id {} ", id);
 
-		/*
-		 * User user = userService.findById(id); if (user == null) {
-		 * System.out.println("Unable to delete. User with id " + id +
-		 * " not found"); return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-		 * }
-		 */
+		Hero hero = heroService.getOne(id);
+		if (hero == null) {
+			_LOG.error("Unable to delete. User with id {} not found",id);
+			return new ResponseEntity<Hero>(HttpStatus.NOT_FOUND);
+		}
 
 		// userService.deleteUserById(id);
-		Hero aHero = getHero(id).getBody();
-		heroService.delete(aHero);
-		
+		heroService.delete(hero);
+
 		return new ResponseEntity<Hero>(HttpStatus.NO_CONTENT);
 	}
 
